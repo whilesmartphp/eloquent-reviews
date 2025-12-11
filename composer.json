@@ -27,5 +27,9 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "require-dev": {
+        "orchestra/testbench": "^10.8",
+        "fakerphp/faker": "^1.24"
+    }
 }
