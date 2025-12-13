@@ -22,7 +22,11 @@
     "autoload-dev": {
         "psr-4": {
             "Whilesmart\\Reviews\\Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "tests/Mocks/User.php",
+            "tests/Mocks/ReviewableDummy.php"
+        ]
     },
     "extra": {
         "laravel": {

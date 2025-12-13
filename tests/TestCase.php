@@ -12,31 +12,31 @@ use Illuminate\Contracts\Foundation\Application;
 abstract class TestCase extends Orchestra
 {
 
-    public function createApplication(): Application
-    {
-        $app = parent::createApplication(); // Calls the parent method to get the base application instance
+    // public function createApplication()
+    // {
+    //     $app = parent::createApplication(); // Calls the parent method to get the base application instance
 
-        // 1. DEFINE MOCK USER MODEL (For the Reviewer relationship)
-        $mockUser = new class extends Model {
-            protected $table = 'users';
-        };
+    //     // 1. DEFINE MOCK USER MODEL (For the Reviewer relationship)
+    //     $mockUser = new class extends Model {
+    //         protected $table = 'users';
+    //     };
 
-        // 2. DEFINE MOCK REVIEWABLE MODEL (For the Polymorphic relationship)
-        $mockReviewable = new class extends Model {
-            protected $table = 'reviewable_dummies';
-        };
+    //     // 2. DEFINE MOCK REVIEWABLE MODEL (For the Polymorphic relationship)
+    //     $mockReviewable = new class extends Model {
+    //         protected $table = 'reviewable_dummies';
+    //     };
 
-        // 3. BIND THE MOCK CLASSES TO THE EXPECTED FQCNs in the IoC Container
-        $app->instance('App\Models\User', $mockUser);
-        $app->instance('App\Models\ReviewableDummy', $mockReviewable);
+    //     // 3. BIND THE MOCK CLASSES TO THE EXPECTED FQCNs in the IoC Container
+    //     $app->instance('App\Models\User', $mockUser);
+    //     $app->instance('App\Models\ReviewableDummy', $mockReviewable);
 
-        // 4. Define the Morph Map
-        Relation::enforceMorphMap([
-            'reviewable_dummy' => 'App\Models\ReviewableDummy',
-        ]);
+    //     // 4. Define the Morph Map
+    //     Relation::enforceMorphMap([
+    //         'reviewable_dummy' => 'App\Models\ReviewableDummy',
+    //     ]);
         
-        return $app;
-    }
+    //     return $app;
+    // }
 
     protected function setUp(): void
     {

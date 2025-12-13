@@ -160,18 +160,19 @@ class ReviewTest extends TestCase
     {
         $review = $this->createReview();
 
-        // Temporarily mock the User model class for the relation to resolve
-        // The foreign key constraint is satisfied by the helper.
-        $mockUser = new class extends Model {
-            protected $table = 'users';
-        };
+        // // Temporarily mock the User model class for the relation to resolve
+        // // The foreign key constraint is satisfied by the helper.
+        // $mockUser = new class extends Model {
+        //     protected $table = 'users';
+        // };
 
-        // Bind the mock class to the App\Models\User FQCN expected by the Review model
-        $this->app->instance('App\Models\User', $mockUser); 
+        // // Bind the mock class to the App\Models\User FQCN expected by the Review model
+        // $this->app->instance('App\Models\User', $mockUser); 
 
         $reviewer = $review->reviewer;
         
-        $this->assertInstanceOf(Model::class, $reviewer); // We expect a Model instance
+        // $this->assertInstanceOf(Model::class, $reviewer); // We expect a Model instance
+        $this->assertInstanceOf(\App\Models\User::class, $reviewer);
         $this->assertEquals($this->reviewerId, $reviewer->id);
     }
 
@@ -180,17 +181,18 @@ class ReviewTest extends TestCase
     {
         $review = $this->createReview();
 
-        // Temporarily mock the ReviewableDummy model class for the relation to resolve
-        $mockReviewable = new class extends Model {
-            protected $table = 'reviewable_dummies';
-        };
+        // // Temporarily mock the ReviewableDummy model class for the relation to resolve
+        // $mockReviewable = new class extends Model {
+        //     protected $table = 'reviewable_dummies';
+        // };
 
-        // Bind the mock class to the App\Models\ReviewableDummy FQCN expected by the MorphMap
-        $this->app->instance('App\Models\ReviewableDummy', $mockReviewable);
+        // // Bind the mock class to the App\Models\ReviewableDummy FQCN expected by the MorphMap
+        // $this->app->instance('App\Models\ReviewableDummy', $mockReviewable);
 
         $reviewable = $review->reviewable;
         
-        $this->assertInstanceOf(Model::class, $reviewable); // We expect a Model instance
+        // $this->assertInstanceOf(Model::class, $reviewable); // We expect a Model instance
+        $this->assertInstanceOf(\App\Models\ReviewableDummy::class, $reviewable);
         $this->assertEquals($this->reviewableId, $reviewable->id);
     }
 }
