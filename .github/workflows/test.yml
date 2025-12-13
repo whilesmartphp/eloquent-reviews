@@ -1,0 +1,66 @@
+name: CI Tests
+
+# 1. Trigger the workflow on push and pull requests to the main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# 2. Define environment variables
+env:
+  # Set the database connection to use the in-memory SQLite connection defined in your TestCase
+  DB_CONNECTION: sqlite
+  DB_DATABASE: ':memory:'
+
+# 3. Define the jobs (What tasks need to be performed)
+jobs:
+  test:
+    name: PHP ${{ matrix.php-versions }} / Laravel ${{ matrix.laravel-versions }}
+    # Run on the latest Ubuntu runner (a virtual machine)
+    runs-on: ubuntu-latest
+
+    # Strategy defines the testing matrix (combinations of PHP and Laravel versions)
+    strategy:
+      fail-fast: true
+      matrix:
+        # Define versions we want to test against
+        php-versions: ['8.2', '8.3']
+        laravel-versions: ['10.*', '11.*']
+        
+        # Exclude known incompatibilities (if any)
+        exclude:
+          - php-versions: '8.2'
+            laravel-versions: '11.*' # Placeholder example: if Laravel 11 requires PHP 8.3+
+
+    # 4. Define steps (sequence of actions within the job)
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Setup PHP Environment
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: dom, curl, libxml, mbstring, zip, pdo_sqlite
+          ini-values: error_reporting=E_ALL
+          coverage: none # We are not running coverage in this matrix
+
+      # Install Composer Dependencies
+      - name: Install Dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          # Install Laravel version specific to the matrix (e.g., laravel/framework:^11.0)
+          dependency-versions: prefer-dist
+          composer-options: --prefer-dist --no-interaction --ignore-platform-reqs
+          # Use the highest matching Laravel version constraint
+          composer-rest: "laravel/framework:${{ matrix.laravel-versions }} orchestra/testbench:^10.0"
+
+      # Prepare Application (Fix Composer's files autoload path)
+      - name: Fix Composer Mocks Autoload
+        run: composer dump-autoload
+
+      # Execute Tests (using phpunit, which Testbench configures)
+      - name: Run PHPUnit Tests
+        run: vendor/bin/phpunit

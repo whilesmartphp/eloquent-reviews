@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Review Package Test Suite">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <env name="DB_CONNECTION" value="testbench"/>
+        <env name="DB_DATABASE" value=":memory:"/>
+        
+        <env name="REVIEWS_USER_MODEL" value="App\Models\User"/>
+    </php>
+
+    <source>
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+        <exclude>
+            <file>./src/ReviewsServiceProvider.php</file>
+            <directory>./database</directory>
+        </exclude>
+    </source>
+</phpunit>
