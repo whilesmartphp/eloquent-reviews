@@ -19,6 +19,11 @@
             "Whilesmart\\Reviews\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Whilesmart\\Reviews\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -30,6 +35,8 @@
     "prefer-stable": true,
     "require-dev": {
         "orchestra/testbench": "^10.8",
-        "fakerphp/faker": "^1.24"
+        "fakerphp/faker": "^1.24",
+        "phpunit/phpunit": "^11.0"
+
     }
 }
