@@ -2,9 +2,8 @@
 
 namespace Whilesmart\Reviews\Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
 use Orchestra\Testbench\Concerns\WithWorkbench;
-use Whilesmart\Reviews\ReviewsServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

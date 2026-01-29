@@ -2,10 +2,10 @@
 
 namespace Whilesmart\Reviews\Tests\Feature;
 
-use Whilesmart\Reviews\Tests\TestCase;
-use Workbench\App\Models\User;
-use Workbench\App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Whilesmart\Reviews\Tests\TestCase;
+use Workbench\App\Models\Product;
+use Workbench\App\Models\User;
 
 class ReviewTest extends TestCase
 {
@@ -24,9 +24,9 @@ class ReviewTest extends TestCase
         // 3. Assertions
         $this->assertDatabaseHas('reviews', [
             'reviewable_id' => $product->id,
-            'reviewer_id'   => $user->id,
-            'status'        => 'accepted',
-            'notes'         => 'Excellent quality!'
+            'reviewer_id' => $user->id,
+            'status' => 'accepted',
+            'notes' => 'Excellent quality!',
         ]);
 
         $this->assertTrue($product->isAccepted());

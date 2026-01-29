@@ -22,16 +22,16 @@ trait Reviewable
     public function addReview(Model $reviewer, string $status, ?string $notes = null, ?array $metadata = null): Review
     {
         return $this->reviews()->create([
-            'reviewer_id'   => $reviewer->getKey(),
+            'reviewer_id' => $reviewer->getKey(),
             'reviewer_type' => $reviewer->getMorphClass(), // Automatically gets the class name
-            'status'        => $status,
-            'notes'         => $notes,
-            'reviewed_at'   => now(),
-            'metadata'      => $metadata,
+            'status' => $status,
+            'notes' => $notes,
+            'reviewed_at' => now(),
+            'metadata' => $metadata,
         ]);
     }
 
-   public function accept(Model $reviewer, ?string $notes = null, ?array $metadata = null): Review
+    public function accept(Model $reviewer, ?string $notes = null, ?array $metadata = null): Review
     {
         return $this->addReview($reviewer, 'accepted', $notes, $metadata);
     }
@@ -40,6 +40,7 @@ trait Reviewable
     {
         return $this->addReview($reviewer, 'rejected', $notes, $metadata);
     }
+
     public function isReviewed(): bool
     {
         return $this->reviews()->exists();

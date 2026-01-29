@@ -1,6 +1,6 @@
 {
-    "name": "whilesmart/laravel-user-authentication",
-    "description": "Package for managing user authentication across our projects",
+    "name": "whilesmart/reviews",
+    "description": "Package for polymorphic reviews across our projects",
     "license": "MIT",
     "package-version": "1.0.5",
     "authors": [
