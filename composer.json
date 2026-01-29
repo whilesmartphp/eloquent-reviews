@@ -1,32 +1,18 @@
 {
-    "name": "whilesmart/reviews",
-    "description": "Polymorphic reviews package for Laravel",
-    "type": "library",
+    "name": "whilesmart/laravel-user-authentication",
+    "description": "Package for managing user authentication across our projects",
     "license": "MIT",
+    "package-version": "1.0.5",
     "authors": [
         {
             "name": "WhileSmart",
-            "email": "dev@whilesmart.com"
+            "email": "engineering@whilesmart.com"
         }
     ],
-    "require": {
-        "php": "^8.2",
-        "illuminate/support": "^12.0",
-        "illuminate/database": "^12.0"
-    },
     "autoload": {
         "psr-4": {
             "Whilesmart\\Reviews\\": "src/"
         }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Whilesmart\\Reviews\\Tests\\": "tests/"
-        },
-        "files": [
-            "tests/Mocks/User.php",
-            "tests/Mocks/ReviewableDummy.php"
-        ]
     },
     "extra": {
         "laravel": {
@@ -35,12 +21,53 @@
             ]
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require-dev": {
-        "orchestra/testbench": "^10.8",
-        "fakerphp/faker": "^1.24",
-        "phpunit/phpunit": "^11.0"
-
+        "orchestra/testbench": "^10.4",
+        "zircote/swagger-php": "^5.1",
+        "nunomaduro/collision": "^8.8",
+        "laravel/pint": "^1.22",
+        "fakerphp/faker": "^1.24"
+    },
+    "require": {
+        "laravel/sanctum": "^4.1",
+        "laravel/socialite": "^5.23",
+        "smartpings/php-sdk": "dev-main",
+        "kreait/laravel-firebase": "^6.1",
+        "pragmarx/google2fa-laravel": "^2.3"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Workbench\\App\\": "workbench/app/",
+            "Whilesmart\\Reviews\\Tests\\": "tests/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "scripts": {
+        "pint": [
+            "./vendor/bin/pint"
+        ],
+        "pint:test": [
+            "./vendor/bin/pint --test"
+        ],
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "lint": [
+            "@php vendor/bin/pint --ansi"
+        ],
+        "test": [
+            "./vendor/bin/pint",
+            "./vendor/bin/testbench package:test"
+        ]
     }
 }

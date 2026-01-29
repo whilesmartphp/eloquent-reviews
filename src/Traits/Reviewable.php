@@ -2,6 +2,7 @@
 
 namespace Whilesmart\Reviews\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Whilesmart\Reviews\Models\Review;
@@ -18,27 +19,27 @@ trait Reviewable
         return $this->morphOne(Review::class, 'reviewable')->latestOfMany();
     }
 
-    public function addReview(int $reviewerId, string $status, ?string $notes = null, ?array $metadata = null): Review
+    public function addReview(Model $reviewer, string $status, ?string $notes = null, ?array $metadata = null): Review
     {
         return $this->reviews()->create([
-            'reviewer_id' => $reviewerId,
-            'status' => $status,
-            'notes' => $notes,
-            'reviewed_at' => now(),
-            'metadata' => $metadata,
+            'reviewer_id'   => $reviewer->getKey(),
+            'reviewer_type' => $reviewer->getMorphClass(), // Automatically gets the class name
+            'status'        => $status,
+            'notes'         => $notes,
+            'reviewed_at'   => now(),
+            'metadata'      => $metadata,
         ]);
     }
 
-    public function accept(int $reviewerId, ?string $notes = null, ?array $metadata = null): Review
+   public function accept(Model $reviewer, ?string $notes = null, ?array $metadata = null): Review
     {
-        return $this->addReview($reviewerId, 'accepted', $notes, $metadata);
+        return $this->addReview($reviewer, 'accepted', $notes, $metadata);
     }
 
-    public function reject(int $reviewerId, string $notes, ?array $metadata = null): Review
+    public function reject(Model $reviewer, string $notes, ?array $metadata = null): Review
     {
-        return $this->addReview($reviewerId, 'rejected', $notes, $metadata);
+        return $this->addReview($reviewer, 'rejected', $notes, $metadata);
     }
-
     public function isReviewed(): bool
     {
         return $this->reviews()->exists();

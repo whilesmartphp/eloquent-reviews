@@ -11,28 +11,21 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
 
-            // Polymorphic relationship to reviewable (DocumentSubmission, DocumentVersion, SubmissionBatch, etc.)
-            $table->string('reviewable_type');
-            $table->unsignedBigInteger('reviewable_id');
+            // Polymorphic relationship to reviewable (type and id )
+            $table->morphs('reviewable');
 
-            // Reviewer
-            $table->foreignId('reviewer_id')->constrained('users')->onDelete('cascade');
+            // Allow any type of user model even null, incase of anonymity (type and id)
+            $table->nullableMorphs('reviewer');
 
             // Review details
-            $table->enum('status', ['pending', 'accepted', 'rejected', 'flagged'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'flagged'])->default('pending')->index();
             $table->text('notes')->nullable();
-            $table->timestamp('reviewed_at')->nullable();
+            $table->timestamp('reviewed_at')->nullable()->index();
 
             // Metadata for extensibility
             $table->json('metadata')->nullable();
 
             $table->timestamps();
-
-            // Indexes
-            $table->index(['reviewable_type', 'reviewable_id']);
-            $table->index('reviewer_id');
-            $table->index('status');
-            $table->index('reviewed_at');
         });
     }
 
