@@ -4,6 +4,7 @@ namespace Whilesmart\Reviews\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Whilesmart\Reviews\Enums\ReviewStatus;
 
 class Review extends Model
 {
@@ -19,6 +20,7 @@ class Review extends Model
     ];
 
     protected $casts = [
+        'status' => ReviewStatus::class,
         'reviewed_at' => 'datetime',
         'metadata' => 'array',
     ];
@@ -34,33 +36,20 @@ class Review extends Model
         return $this->morphTo();
     }
 
-    // public function scopeAccepted($query)
+    // public function isAccepted(): bool
     // {
-    //     return $query->where('status', 'accepted');
+    //     return $this->status === ReviewStatus::ACCEPTED;
     // }
 
-    // public function scopeRejected($query)
-    // {
-    //     return $query->where('status', 'rejected');
-    // }
-
-    // public function scopePending($query)
-    // {
-    //     return $query->where('status', 'pending');
-    // }
-
-    public function isAccepted(): bool
+    public function accept(): void
     {
-        return $this->status === 'accepted';
+        $this->status = ReviewStatus::ACCEPTED;
+        $this->save();
     }
 
-    // public function isRejected(): bool
-    // {
-    //     return $this->status === 'rejected';
-    // }
-
-    // public function isPending(): bool
-    // {
-    //     return $this->status === 'pending';
-    // }
+    public function reject(): void
+    {
+        $this->status = ReviewStatus::REJECTED;
+        $this->save();
+    }
 }

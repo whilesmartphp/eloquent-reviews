@@ -5,6 +5,7 @@ namespace Whilesmart\Reviews\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Whilesmart\Reviews\Enums\ReviewStatus;
 use Whilesmart\Reviews\Models\Review;
 
 trait Reviewable
@@ -19,26 +20,16 @@ trait Reviewable
         return $this->morphOne(Review::class, 'reviewable')->latestOfMany();
     }
 
-    public function addReview(Model $reviewer, string $status, ?string $notes = null, ?array $metadata = null): Review
+    public function addReview(?Model $reviewer, ReviewStatus $status = ReviewStatus::PENDING, ?string $notes = null, ?array $metadata = null): Review
     {
         return $this->reviews()->create([
-            'reviewer_id' => $reviewer->getKey(),
-            'reviewer_type' => $reviewer->getMorphClass(), // Automatically gets the class name
-            'status' => $status,
+            'reviewer_id' => $reviewer?->getKey(),
+            'reviewer_type' => $reviewer?->getMorphClass(), // Automatically gets the class name
+            'status' => $status->value,
             'notes' => $notes,
             'reviewed_at' => now(),
             'metadata' => $metadata,
         ]);
-    }
-
-    public function accept(Model $reviewer, ?string $notes = null, ?array $metadata = null): Review
-    {
-        return $this->addReview($reviewer, 'accepted', $notes, $metadata);
-    }
-
-    public function reject(Model $reviewer, string $notes, ?array $metadata = null): Review
-    {
-        return $this->addReview($reviewer, 'rejected', $notes, $metadata);
     }
 
     public function isReviewed(): bool
@@ -48,12 +39,13 @@ trait Reviewable
 
     public function isAccepted(): bool
     {
-        return $this->latestReview?->isAccepted() ?? false;
+        // return $this->status === ReviewStatus::ACCEPTED;
+        return $this->latestReview?->status === ReviewStatus::ACCEPTED;
     }
 
     public function isRejected(): bool
     {
-        return $this->latestReview?->isRejected() ?? false;
+        return $this->latestReview?->status === ReviewStatus::REJECTED;
     }
 
     public function getReviewStatus(): ?string
@@ -63,6 +55,6 @@ trait Reviewable
 
     public function getReviewNotes(): ?string
     {
-        return $this->latestReview?->notes;
+        return $this->notes;
     }
 }
