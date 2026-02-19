@@ -55,6 +55,6 @@ trait Reviewable
 
     public function getReviewNotes(): ?string
     {
-        return $this->notes;
+        return $this->latestReview?->notes;
     }
 }
