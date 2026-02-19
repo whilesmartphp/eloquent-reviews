@@ -36,10 +36,6 @@ class Review extends Model
         return $this->morphTo();
     }
 
-    // public function isAccepted(): bool
-    // {
-    //     return $this->status === ReviewStatus::ACCEPTED;
-    // }
 
     public function accept(): void
     {
