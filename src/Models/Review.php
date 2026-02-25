@@ -47,4 +47,14 @@ class Review extends Model
         $this->status = ReviewStatus::REJECTED;
         $this->save();
     }
+
+    public function isAccepted(): bool
+    {
+        return $this->status === ReviewStatus::ACCEPTED;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->status === ReviewStatus::REJECTED;
+    }
 }

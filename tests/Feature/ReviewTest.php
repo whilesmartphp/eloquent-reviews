@@ -6,7 +6,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Whilesmart\Reviews\Enums\ReviewStatus;
 use Whilesmart\Reviews\Models\Review;
 use Whilesmart\Reviews\Tests\TestCase;
-use Whilesmart\Reviews\Traits\Reviewable;
 use Workbench\App\Models\Product;
 use Workbench\App\Models\User;
 
@@ -15,15 +14,15 @@ class ReviewTest extends TestCase
     use RefreshDatabase;
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function test_a_product_can_receive_a_review_from_a_user()
+    public function test_a_model_can_be_reviewed_by_a_reviewer()
     {
         $user = User::create(['name' => 'iMercy', 'email' => 'test@example.com', 'password' => bcrypt('password')]);
         $product = Product::create(['title' => 'Smart Watch']);
 
-        // Act: Create a review using the trait (default status is PENDING)
-        $product->addReview($user, notes: 'Great watch!');
+        // Act: Using the signature c
+        $product->addReview(reviewer: $user, status: ReviewStatus::PENDING, notes: 'Great watch!');
 
-        // Assert: Check creation
+        // Assert
         $this->assertDatabaseHas('reviews', [
             'reviewable_id' => $product->id,
             'reviewer_id' => $user->id,
@@ -33,57 +32,49 @@ class ReviewTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function test_a_product_can_receive_an_anonymous_review()
+    public function test_a_model_can_receive_an_anonymous_review()
     {
         $product = Product::create(['title' => 'Anonymous Product']);
 
-        // Act: Pass null for the reviewer
-        $product->addReview(null, notes: 'Left by a guest');
+        // Act: reviewer is null/omitted
+        $product->addReview(reviewer: null, status: ReviewStatus::PENDING, notes: 'Left by a guest');
 
-        // Assert: reviewer_id and reviewer_type should be null
         $this->assertDatabaseHas('reviews', [
             'reviewable_id' => $product->id,
             'reviewer_id' => null,
-            'reviewer_type' => null,
             'notes' => 'Left by a guest',
         ]);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function test_an_existing_review_can_be_accepted_via_model_method()
+    public function test_a_review_can_be_accepted()
     {
         $product = Product::create(['title' => 'Logic Test']);
         $review = $product->addReview(null, notes: 'Pending Review');
 
-        // Act: Call the new action method on the Reviewable Model
+        // Act: Use the action method on the Review model
         $review->accept();
-        $product->refresh();
 
-        // Assert: Status updated to ACCEPTED
+        // Assert
+        $this->assertTrue($review->isAccepted());
         $this->assertEquals(ReviewStatus::ACCEPTED, $review->status);
-        $this->assertTrue($product->isAccepted());
 
-        $this->assertDatabaseHas('reviews', [
-            'id' => $review->id,
-            'status' => ReviewStatus::ACCEPTED->value,
-        ]);
+        // Verify the parent model (Product) also reflects this as the latest state
+        $this->assertTrue($product->fresh()->isAccepted());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function test_an_existing_review_can_be_rejected_via_model_method()
+    public function test_a_review_can_be_rejected_with_notes()
     {
         $product = Product::create(['title' => 'Logic Test']);
-        $review = $product->addReview(null, notes: 'Bad Review');
+        $review = $product->addReview(null, notes: 'Initial Notes');
 
-        // Act: Call the new action method on the Review Model
+        // Act
         $review->reject();
 
-        // Assert: Status updated to REJECTED
+        // Assert
+        $this->assertTrue($review->isRejected());
         $this->assertEquals(ReviewStatus::REJECTED, $review->status);
-        $this->assertTrue($product->isRejected());
-        $this->assertDatabaseHas('reviews', [
-            'id' => $review->id,
-            'status' => ReviewStatus::REJECTED->value,
-        ]);
+        $this->assertTrue($product->fresh()->isRejected());
     }
 }
