@@ -32,7 +32,6 @@ class Review extends Model
 
     public function reviewer(): MorphTo
     {
-        // return $this->belongsTo(\App\Models\User::class, 'reviewer_id');
         return $this->morphTo();
     }
 

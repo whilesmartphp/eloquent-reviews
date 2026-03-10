@@ -77,4 +77,29 @@ class ReviewTest extends TestCase
         $this->assertEquals(ReviewStatus::REJECTED, $review->status);
         $this->assertTrue($product->fresh()->isRejected());
     }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_individual_reviews_retain_their_own_status_regardless_of_latest()
+    {
+        $product = Product::create(['title' => 'Multiple Reviews Test']);
+
+        // Add first review and accept it
+        $firstReview = $product->addReview(null, notes: 'First Review');
+        $firstReview->accept();
+
+        // Add second review and reject it
+        $secondReview = $product->addReview(null, notes: 'Second Review');
+        $secondReview->reject();
+
+        // Assert that the first review is still accepted
+        $this->assertTrue($firstReview->isAccepted());
+        $this->assertEquals(ReviewStatus::ACCEPTED, $firstReview->status);
+
+        // Assert that the second review is rejected
+        $this->assertTrue($secondReview->isRejected());
+        $this->assertEquals(ReviewStatus::REJECTED, $secondReview->status);
+
+        // The product's latest review status should reflect the second review (rejected)
+        $this->assertTrue($product->fresh()->isRejected());
+    }
 }

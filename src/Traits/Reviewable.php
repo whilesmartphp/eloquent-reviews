@@ -39,7 +39,6 @@ trait Reviewable
 
     public function isAccepted(): bool
     {
-        // return $this->status === ReviewStatus::ACCEPTED;
         return $this->latestReview?->status === ReviewStatus::ACCEPTED;
     }
 
