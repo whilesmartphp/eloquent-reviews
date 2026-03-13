@@ -3,14 +3,14 @@
 namespace Whilesmart\Reviews\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Whilesmart\Reviews\Enums\ReviewStatus;
 
 class Review extends Model
 {
     protected $fillable = [
         'reviewable_type',
         'reviewable_id',
+        'reviewer_type',
         'reviewer_id',
         'status',
         'notes',
@@ -19,47 +19,30 @@ class Review extends Model
     ];
 
     protected $casts = [
+        'status' => ReviewStatus::class,
         'reviewed_at' => 'datetime',
         'metadata' => 'array',
     ];
 
-    public function reviewable(): MorphTo
+    public function accept(): void
     {
-        return $this->morphTo();
+        $this->status = ReviewStatus::ACCEPTED;
+        $this->save();
     }
 
-    public function reviewer(): BelongsTo
+    public function reject(): void
     {
-        return $this->belongsTo(\App\Models\User::class, 'reviewer_id');
-    }
-
-    public function scopeAccepted($query)
-    {
-        return $query->where('status', 'accepted');
-    }
-
-    public function scopeRejected($query)
-    {
-        return $query->where('status', 'rejected');
-    }
-
-    public function scopePending($query)
-    {
-        return $query->where('status', 'pending');
+        $this->status = ReviewStatus::REJECTED;
+        $this->save();
     }
 
     public function isAccepted(): bool
     {
-        return $this->status === 'accepted';
+        return $this->status === ReviewStatus::ACCEPTED;
     }
 
     public function isRejected(): bool
     {
-        return $this->status === 'rejected';
-    }
-
-    public function isPending(): bool
-    {
-        return $this->status === 'pending';
+        return $this->status === ReviewStatus::REJECTED;
     }
 }
