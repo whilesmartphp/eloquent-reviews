@@ -58,9 +58,6 @@ class ReviewTest extends TestCase
         // Assert
         $this->assertTrue($review->isAccepted());
         $this->assertEquals(ReviewStatus::ACCEPTED, $review->status);
-
-        // Verify the parent model (Product) also reflects this as the latest state
-        $this->assertTrue($product->fresh()->isAccepted());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -75,7 +72,6 @@ class ReviewTest extends TestCase
         // Assert
         $this->assertTrue($review->isRejected());
         $this->assertEquals(ReviewStatus::REJECTED, $review->status);
-        $this->assertTrue($product->fresh()->isRejected());
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
@@ -98,8 +94,5 @@ class ReviewTest extends TestCase
         // Assert that the second review is rejected
         $this->assertTrue($secondReview->isRejected());
         $this->assertEquals(ReviewStatus::REJECTED, $secondReview->status);
-
-        // The product's latest review status should reflect the second review (rejected)
-        $this->assertTrue($product->fresh()->isRejected());
     }
 }

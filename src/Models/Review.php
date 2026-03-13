@@ -3,7 +3,6 @@
 namespace Whilesmart\Reviews\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Whilesmart\Reviews\Enums\ReviewStatus;
 
 class Review extends Model
@@ -24,16 +23,6 @@ class Review extends Model
         'reviewed_at' => 'datetime',
         'metadata' => 'array',
     ];
-
-    public function reviewable(): MorphTo
-    {
-        return $this->morphTo();
-    }
-
-    public function reviewer(): MorphTo
-    {
-        return $this->morphTo();
-    }
 
     public function accept(): void
     {
