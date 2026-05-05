@@ -1,0 +1,23 @@
+{
+  "name": "whilesmart/reviews",
+  "description": "model reviews",
+  "icon": "package",
+  "category": {
+    "language": "php",
+    "framework": "laravel"
+  },
+  "sidebar": [
+    {
+      "title": "Getting Started",
+      "path": "docs/getting-started.md"
+    },
+    {
+      "title": "Installation & Setup",
+      "path": "docs/configuration.md"
+    },
+    {
+      "title": "Usage Guide",
+      "path": "docs/api-reference.md"
+    }
+  ]
+}
