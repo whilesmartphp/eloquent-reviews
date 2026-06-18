@@ -2,7 +2,7 @@
     "name": "whilesmart/reviews",
     "description": "Package for polymorphic reviews across our projects",
     "license": "MIT",
-    "package-version": "1.0.5",
+    "package-version": "1.0.6",
     "authors": [
         {
             "name": "WhileSmart",
@@ -29,11 +29,9 @@
         "fakerphp/faker": "^1.24"
     },
     "require": {
-        "laravel/sanctum": "^4.1",
-        "laravel/socialite": "^5.23",
-        "smartpings/php-sdk": "dev-main",
-        "kreait/laravel-firebase": "^6.1",
-        "pragmarx/google2fa-laravel": "^2.3"
+        "php": "^8.2",
+        "illuminate/database": "^11.0|^12.0",
+        "illuminate/support": "^11.0|^12.0"
     },
     "autoload-dev": {
         "psr-4": {
