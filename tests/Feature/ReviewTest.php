@@ -3,6 +3,7 @@
 namespace Whilesmart\Reviews\Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Whilesmart\Reviews\Enums\ReviewStatus;
 use Whilesmart\Reviews\Models\Review;
 use Whilesmart\Reviews\Tests\TestCase;
@@ -13,7 +14,7 @@ class ReviewTest extends TestCase
 {
     use RefreshDatabase;
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function test_a_model_can_be_reviewed_by_a_reviewer()
     {
         $user = User::create(['name' => 'iMercy', 'email' => 'test@example.com', 'password' => bcrypt('password')]);
@@ -31,7 +32,7 @@ class ReviewTest extends TestCase
         ]);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function test_a_model_can_receive_an_anonymous_review()
     {
         $product = Product::create(['title' => 'Anonymous Product']);
@@ -46,7 +47,7 @@ class ReviewTest extends TestCase
         ]);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function test_a_review_can_be_accepted()
     {
         $product = Product::create(['title' => 'Logic Test']);
@@ -60,7 +61,7 @@ class ReviewTest extends TestCase
         $this->assertEquals(ReviewStatus::ACCEPTED, $review->status);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function test_a_review_can_be_rejected_with_notes()
     {
         $product = Product::create(['title' => 'Logic Test']);
@@ -74,7 +75,7 @@ class ReviewTest extends TestCase
         $this->assertEquals(ReviewStatus::REJECTED, $review->status);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function test_individual_reviews_retain_their_own_status_regardless_of_latest()
     {
         $product = Product::create(['title' => 'Multiple Reviews Test']);

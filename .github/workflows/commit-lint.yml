@@ -14,9 +14,9 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 24
 
-      - run: npm install --save-dev @commitlint/{config-conventional,cli}
+      - run: npm install --save-dev @commitlint/{config-conventional,cli}@^21
 
       - name: Create commitlint config file
         run: |
