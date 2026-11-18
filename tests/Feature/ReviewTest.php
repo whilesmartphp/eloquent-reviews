@@ -21,7 +21,8 @@ class ReviewTest extends TestCase
         $product = Product::create(['title' => 'Smart Watch']);
 
         // Act: Using the signature c
-        $product->addReview(reviewer: $user, status: ReviewStatus::PENDING, notes: 'Great watch!');
+        $review = $product->addReview(reviewer: $user, status: ReviewStatus::PENDING, notes: 'Great watch!');
+        $this->assertIsInt($review->fresh()->reviewable_id);
 
         // Assert
         $this->assertDatabaseHas('reviews', [

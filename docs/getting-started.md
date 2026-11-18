@@ -1,24 +1,21 @@
-# Getting Started
+# Getting started
 
-## Installation
+Install the package and create its tables:
 
-```bash
-# Add your installation command here
+```sh
+composer require whilesmart/reviews
+php artisan migrate
 ```
 
-## Setup
+Add `Whilesmart\Reviews\Traits\Reviewable` to the Eloquent model that receives reviews. Pass an Eloquent reviewer model and a `Whilesmart\Reviews\Enums\ReviewStatus` value to `addReview()`. The status values are `pending`, `accepted`, `rejected`, and `flagged`.
 
-```
-// Add setup instructions here
-```
+```php
+use Whilesmart\Reviews\Enums\ReviewStatus;
 
-## Basic Usage
-
-```
-// Add usage examples here
+$review = $evidence->addReview($user, ReviewStatus::PENDING, 'Needs checking');
+$review->accept();
 ```
 
-## Next Steps
+The reviewer may be null for an anonymous decision. Decisions are mutable; use [review revisions](review-history.md) when earlier snapshots must remain unchanged.
 
-- [Configuration](./configuration.md) — Customize the behavior
-- [API Reference](./api-reference.md) — Full API documentation
+Applications authorize reviewers and expose their own HTTP endpoints. See [configuration](configuration.md) for model and identifier options, and the [API reference](api-reference.md) for method signatures.

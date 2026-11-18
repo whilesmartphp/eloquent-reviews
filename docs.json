@@ -18,6 +18,10 @@
     {
       "title": "Usage Guide",
       "path": "docs/api-reference.md"
+    },
+    {
+      "title": "Review History",
+      "path": "docs/review-history.md"
     }
   ]
 }
