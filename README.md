@@ -1,108 +1,34 @@
-# WhileSmart Reviews Package
+# WhileSmart Reviews
 
-Polymorphic reviews package for Laravel that allows any model to be reviewable.
+Attach review decisions and correction history to Laravel models.
 
-## Installation
-
-Already installed in this project via local autoloading.
-
-## Usage
-
-### Making a Model Reviewable
-
-Add the `Reviewable` trait to any model:
-
-```php
-use Whilesmart\Reviews\Traits\Reviewable;
-
-class DocumentSubmission extends Model
-{
-    use Reviewable;
-
-    // ... rest of model
-}
+```sh
+composer require whilesmart/reviews
+php artisan migrate
 ```
 
-### Review a Model
+Add `Whilesmart\Reviews\Traits\Reviewable` to a model. Create a decision with a reviewer model and a `ReviewStatus` enum:
 
 ```php
-// Accept a document submission
-$submission->accept(
-    reviewerId: $user->id,
-    notes: 'Document looks good',
-    metadata: ['ip_address' => request()->ip()]
-);
+use Whilesmart\Reviews\Enums\ReviewStatus;
 
-// Reject with reason
-$submission->reject(
-    reviewerId: $user->id,
-    notes: 'Document is expired, please resubmit',
-    metadata: ['rejection_reason' => 'expired']
-);
+$review = $evidence->addReview($user, ReviewStatus::ACCEPTED, 'Checked');
+$latest = $evidence->latestReview;
+```
 
-// Custom review
-$submission->addReview(
-    reviewerId: $user->id,
-    status: 'flagged',
-    notes: 'Needs manual verification',
-    metadata: []
+A reviewer can be any Eloquent model or null for an anonymous review. `reviews()` returns the subject's decisions. Reviews expose `reviewable()` and `reviewer()` relations.
+
+For data corrections, append a snapshot with the revision number the caller last read:
+
+```php
+$revision = $evidence->appendReviewRevision(
+    reviewer: $user,
+    expectedRevision: 0,
+    changes: ['amount' => 125],
+    initialData: ['amount' => 120, 'reference' => 'R-1'],
 );
 ```
 
-### Query Reviews
+Stale edits throw `ReviewRevisionConflict`. Earlier revision models reject updates and deletes. Applications provide authorization, field validation and HTTP responses; the package does not register production routes.
 
-```php
-// Get all reviews
-$reviews = $submission->reviews;
-
-// Get latest review
-$latestReview = $submission->latestReview;
-
-// Check status
-if ($submission->isAccepted()) {
-    // Document was accepted
-}
-
-if ($submission->isRejected()) {
-    // Document was rejected
-}
-
-// Get review details
-$status = $submission->getReviewStatus(); // 'accepted', 'rejected', etc.
-$notes = $submission->getReviewNotes();
-```
-
-### Query by Review Status
-
-```php
-// Get all accepted submissions
-$acceptedSubmissions = DocumentSubmission::whereHas('reviews', function($q) {
-    $q->accepted();
-})->get();
-
-// Get all rejected submissions
-$rejectedSubmissions = DocumentSubmission::whereHas('reviews', function($q) {
-    $q->rejected();
-})->get();
-```
-
-## Models That Can Use Reviewable
-
-- `DocumentSubmission` - Review individual document submissions
-- `DocumentVersion` - Review specific versions of documents
-- `SubmissionBatch` - Review entire batches of submissions
-- Any other model that needs review functionality
-
-## Database Structure
-
-The `reviews` table has these fields:
-- `reviewable_type` & `reviewable_id` - Polymorphic relationship
-- `reviewer_id` - User who performed the review
-- `status` - 'pending', 'accepted', 'rejected', 'flagged'
-- `notes` - Review comments/reasons
-- `reviewed_at` - Timestamp of review
-- `metadata` - JSON field for additional data
-
-## Extending the Package
-
-This package is designed to be extracted into a standalone package later. Keep all reviews logic contained within this directory.
+See [getting started](docs/getting-started.md), [configuration](docs/configuration.md), [API reference](docs/api-reference.md), and [review history](docs/review-history.md) for customization and upgrade requirements.

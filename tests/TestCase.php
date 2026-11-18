@@ -16,4 +16,14 @@ class TestCase extends Orchestra
             ReviewsServiceProvider::class,
         ];
     }
+
+    protected function getEnvironmentSetUp($app): void
+    {
+        if (env('DB_CONNECTION') === 'mysql') {
+            if (! str_ends_with((string) env('DB_DATABASE'), '_tests')) {
+                throw new \RuntimeException('MySQL tests require a dedicated database ending in _tests.');
+            }
+            $app['config']->set('database.default', 'mysql');
+        }
+    }
 }

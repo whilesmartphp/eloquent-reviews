@@ -2,7 +2,7 @@
     "name": "whilesmart/reviews",
     "description": "Package for polymorphic reviews across our projects",
     "license": "MIT",
-    "version": "1.0.6",
+    "version": "1.1.0",
     "authors": [
         {
             "name": "WhileSmart",
