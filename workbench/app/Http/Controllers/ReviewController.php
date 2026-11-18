@@ -3,10 +3,11 @@
 namespace Workbench\App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Whilesmart\Reviews\Enums\ReviewStatus;
 use Workbench\App\Models\Product;
 
-class ReviewController extends \Illuminate\Routing\Controller
+class ReviewController extends Controller
 {
     public function store(Request $request, $productId)
     {

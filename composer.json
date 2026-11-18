@@ -2,7 +2,7 @@
     "name": "whilesmart/reviews",
     "description": "Package for polymorphic reviews across our projects",
     "license": "MIT",
-    "package-version": "1.0.6",
+    "version": "1.0.6",
     "authors": [
         {
             "name": "WhileSmart",
@@ -26,7 +26,8 @@
         "zircote/swagger-php": "^5.1",
         "nunomaduro/collision": "^8.8",
         "laravel/pint": "^1.22",
-        "fakerphp/faker": "^1.24"
+        "fakerphp/faker": "^1.24",
+        "phpunit/phpunit": "^11.5"
     },
     "require": {
         "php": "^8.2",
@@ -69,5 +70,10 @@
             "./vendor/bin/pint",
             "./vendor/bin/testbench package:test"
         ]
+    },
+    "config": {
+        "platform": {
+            "php": "8.2"
+        }
     }
 }
